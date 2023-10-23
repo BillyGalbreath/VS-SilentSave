@@ -3,11 +3,11 @@
   "name": "SilentSave",
   "modid": "silentsave",
   "version": "1.0.0",
-  "description": "Silence all that console noise every 5 minutes when the game saves",
+  "description": "Silence all that console noise when the game saves every 5 minutes",
   "website": "https://github.com/BillyGalbreath/VS-SilentSave",
   "authors": [ "BillyGalbreath" ],
   "side": "Server",
-  "dependency": {
+  "dependencies": {
     "game": "1.18.8"
   }
 }

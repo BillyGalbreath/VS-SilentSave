@@ -1,3 +1,3 @@
 # SilentSave
 
-Silence all that console noise every 5 minutes when the game saves.
+Silence all that console noise when the game saves every 5 minutes.
