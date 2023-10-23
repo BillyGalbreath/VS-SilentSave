@@ -7,7 +7,10 @@ using Vintagestory.Server;
 namespace SilentSave;
 
 public class SilentSaveMod : ModSystem {
-    private static bool allowLogger = true;
+    private static readonly object LOCK = new();
+
+    private static bool doingAutoSave;
+    private static bool doingOffThreadTickSave;
 
     private Harmony? harmony;
 
@@ -32,22 +35,22 @@ public class SilentSaveMod : ModSystem {
     }
 
     public static void PreDoAutoSave() {
-        allowLogger = false;
+        lock (LOCK) doingAutoSave = true;
     }
 
     public static void PostDoAutoSave() {
-        allowLogger = true;
+        lock (LOCK) doingAutoSave = false;
     }
 
     public static void PreOnSeparateThreadTick() {
-        allowLogger = false;
+        lock (LOCK) doingOffThreadTickSave = true;
     }
 
     public static void PostOnSeparateThreadTick() {
-        allowLogger = true;
+        lock (LOCK) doingOffThreadTickSave = false;
     }
 
     public static bool PreLogImpl() {
-        return allowLogger;
+        lock (LOCK) return !(doingAutoSave || doingOffThreadTickSave);
     }
 }
