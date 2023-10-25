@@ -8,16 +8,22 @@ using Vintagestory.Server;
 namespace SilentSave;
 
 public class SilentSaveMod : ModSystem {
-    private static readonly object LOCK = new();
+    private static SilentSaveMod instance = null!;
 
-    private static bool doingAutoSave;
-    private static bool doingOffThreadTickSave;
+    private readonly object @lock = new();
+
+    private bool doingAutoSave;
+    private bool doingOffThreadTickSave;
 
     private Harmony? harmony;
 
+    public SilentSaveMod() {
+        instance = this;
+    }
+
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    public static bool SaveInProgress() {
-        lock (LOCK) return doingAutoSave || doingOffThreadTickSave;
+    public bool SaveInProgress() {
+        return doingAutoSave || doingOffThreadTickSave;
     }
 
     public override bool ShouldLoad(EnumAppSide side) {
@@ -41,22 +47,22 @@ public class SilentSaveMod : ModSystem {
     }
 
     public static void PreDoAutoSave() {
-        lock (LOCK) doingAutoSave = true;
+        lock (instance.@lock) instance.doingAutoSave = true;
     }
 
     public static void PostDoAutoSave() {
-        lock (LOCK) doingAutoSave = false;
+        lock (instance.@lock) instance.doingAutoSave = false;
     }
 
     public static void PreOnSeparateThreadTick() {
-        lock (LOCK) doingOffThreadTickSave = true;
+        lock (instance.@lock) instance.doingOffThreadTickSave = true;
     }
 
     public static void PostOnSeparateThreadTick() {
-        lock (LOCK) doingOffThreadTickSave = false;
+        lock (instance.@lock) instance.doingOffThreadTickSave = false;
     }
 
     public static bool PreLogImpl() {
-        return !SaveInProgress();
+        lock (instance.@lock) return !instance.SaveInProgress();
     }
 }
