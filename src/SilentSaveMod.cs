@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using HarmonyLib;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
@@ -13,6 +14,11 @@ public class SilentSaveMod : ModSystem {
     private static bool doingOffThreadTickSave;
 
     private Harmony? harmony;
+
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    public static bool SaveInProgress() {
+        lock (LOCK) return doingAutoSave || doingOffThreadTickSave;
+    }
 
     public override bool ShouldLoad(EnumAppSide side) {
         return side.IsServer();
@@ -51,6 +57,6 @@ public class SilentSaveMod : ModSystem {
     }
 
     public static bool PreLogImpl() {
-        lock (LOCK) return !(doingAutoSave || doingOffThreadTickSave);
+        return !SaveInProgress();
     }
 }
