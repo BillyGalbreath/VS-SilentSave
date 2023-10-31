@@ -23,7 +23,7 @@ public class SilentSaveMod : ModSystem {
 
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public bool SaveInProgress() {
-        return doingAutoSave || doingOffThreadTickSave;
+        lock (@lock) return doingAutoSave || doingOffThreadTickSave;
     }
 
     public override bool ShouldLoad(EnumAppSide side) {
@@ -63,6 +63,6 @@ public class SilentSaveMod : ModSystem {
     }
 
     public static bool PreLogImpl() {
-        lock (instance.@lock) return !instance.SaveInProgress();
+        return !instance.SaveInProgress();
     }
 }
