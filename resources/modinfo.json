@@ -2,7 +2,7 @@
   "type": "code",
   "name": "SilentSave",
   "modid": "silentsave",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Silence all that console noise when the game saves every 5 minutes",
   "website": "https://github.com/BillyGalbreath/VS-SilentSave",
   "authors": [ "BillyGalbreath" ],
